@@ -1,0 +1,11 @@
+{
+    "archives": null,
+    "files": [
+        "finance/accounting.lua",
+        "finance/ledger.gs.lua",
+        "finance/ledger.script.lua",
+        "finance/statements.css.lua",
+        "finance/statements.res.lua",
+        "finance/statements.script.lua"
+    ]
+}

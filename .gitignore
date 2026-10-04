@@ -1,0 +1,9 @@
+# game-generated build output (created when publishing)
+.cooked_pc/
+.cooked_console/
+
+# local scratch
+screenshots/
+screenshot.ps1
+*.zip
+Thumbs.db

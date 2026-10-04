@@ -1,0 +1,45 @@
+{
+    "authors": [
+        {
+            "name": "Trevor Coleman",
+            "role": "CREATOR"
+        }
+    ],
+    "description": "Proper accounting for your transport empire. Replaces the Finances tab of the finance window with an Income Statement, Cash Flow Statement and Balance Sheet built from the game's own numbers. Capital expenditure never reduces operating profit, loans are financing (not income), vehicle depreciation uses the game's own values, and the cash flow reconciles to your bank account. Reporting only: it never changes the economy.",
+    "name": "Real Financial Statements",
+    "summary": "Proper accounting for your transport empire, with real financial statements.",
+    "tags": [
+        "Script Mod"
+    ],
+    "url": "https://mod.io/g/transportfever3/m/real-financial-statements",
+    "localization": {
+        "ru": {
+            "name": "Настоящая финансовая отчётность",
+            "summary": "Настоящий бухучёт для вашей транспортной империи: прибыли и убытки, денежные потоки, баланс."
+        },
+        "fr": {
+            "name": "Vrais états financiers",
+            "summary": "Une vraie comptabilité pour votre empire de transport : résultat, flux de trésorerie et bilan."
+        },
+        "de": {
+            "name": "Echte Finanzberichte",
+            "summary": "Echte Buchhaltung für Ihr Transportimperium: GuV, Cashflow und Bilanz."
+        },
+        "ja": {
+            "name": "本格的な財務諸表",
+            "summary": "輸送帝国のための本格的な会計：損益計算書、キャッシュフロー、貸借対照表。"
+        },
+        "zh_CN": {
+            "name": "真正的财务报表",
+            "summary": "为您的运输帝国提供真正的会计：利润表、现金流量表和资产负债表。"
+        },
+        "zh_TW": {
+            "name": "真正的財務報表",
+            "summary": "為您的運輸帝國提供真正的會計：損益表、現金流量表與資產負債表。"
+        },
+        "pt_BR": {
+            "name": "Demonstrações Financeiras Reais",
+            "summary": "Contabilidade de verdade para o seu império de transporte: DRE, fluxo de caixa e balanço."
+        }
+    }
+}
