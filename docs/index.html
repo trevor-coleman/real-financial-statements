@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Real Financial Statements for Transport Fever 3</title>
+<meta name="description" content="Proper accounting for your transport empire: an Income Statement, Cash Flow Statement and Balance Sheet in the Transport Fever 3 finance window.">
+<meta property="og:title" content="Real Financial Statements for Transport Fever 3">
+<meta property="og:description" content="Capex out of profit, loans out of income, cash flow that reconciles. A Transport Fever 3 mod.">
+<meta property="og:image" content="cover.png">
+<style>
+  :root {
+    --bg: #0f1822; --panel: #1b2835; --line: #33495c; --text: #e8eff5; --muted: #9db4c6;
+    --accent: #4fa3d9; --green: #5ec08a; --amber: #e3a64b;
+  }
+  @media (prefers-color-scheme: light) {
+    :root { --bg: #f4f7fa; --panel: #ffffff; --line: #d3dde6; --text: #16212b; --muted: #55697a; --accent: #1f7ab8; --green: #2f8a57; --amber: #b9791a; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 17px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 16px; }
+  header { padding: 40px 0 8px; }
+  h1 { font-size: clamp(2rem, 5vw, 3rem); line-height: 1.15; margin: 0 0 8px; }
+  .tagline { color: var(--muted); font-size: 1.2rem; margin: 0 0 24px; }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; margin: 0 0 32px; }
+  .btn { display: inline-block; padding: 10px 18px; border-radius: 10px; text-decoration: none; font-weight: 600; border: 1px solid var(--line); color: var(--text); background: var(--panel); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  img.hero { width: 100%; height: auto; border-radius: 14px; border: 1px solid var(--line); display: block; }
+  h2 { margin: 44px 0 10px; font-size: 1.5rem; }
+  p { margin: 0 0 14px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin: 18px 0; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; }
+  .card h3 { margin: 0 0 6px; font-size: 1.05rem; }
+  .card p { margin: 0; color: var(--muted); font-size: .95rem; }
+  .card.i { border-top: 4px solid var(--accent); } .card.c { border-top: 4px solid var(--green); } .card.b { border-top: 4px solid var(--amber); }
+  ul { padding-left: 1.2rem; } li { margin: 6px 0; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: .95rem; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; }
+  code { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 1px 6px; font-size: .9em; }
+  footer { margin: 56px 0 40px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Real Financial Statements</h1>
+    <p class="tagline">Proper accounting for your transport empire, with real financial statements.</p>
+    <div class="cta">
+      <a class="btn primary" href="https://mod.io/g/transportfever3/m/real-financial-statements">Get it on mod.io</a>
+      <a class="btn" href="https://github.com/trevor-coleman/real-financial-statements">Source on GitHub</a>
+    </div>
+    <img class="hero" src="cover.png" alt="The Transport Fever 3 finance window with Income Statement, Cash Flow, Balance Sheet and Default tabs">
+  </header>
+
+  <main>
+    <h2>What it does</h2>
+    <p>A mod for <strong>Transport Fever 3</strong> that replaces the <em>Finances</em> tab of the finance window with three proper statements, built from the game's own numbers. The original table is still there as the <strong>Default</strong> tab.</p>
+    <div class="grid">
+      <div class="card i"><h3>Income Statement</h3><p>Revenue, operating expenses, operating profit before depreciation (EBITDA), depreciation, interest and net income.</p></div>
+      <div class="card c"><h3>Cash Flow</h3><p>Operating, investing and financing activities, net change in cash, and opening and closing cash.</p></div>
+      <div class="card b"><h3>Balance Sheet</h3><p>Cash, vehicles, infrastructure, loans and equity as of now.</p></div>
+    </div>
+
+    <h2>How money is treated</h2>
+    <ul>
+      <li><strong>Capital expenditure never reduces operating profit.</strong> Roads, tracks, stations, depots, signals and vehicle purchases are investing cash flows, shown as a memo line on the Income Statement.</li>
+      <li><strong>Loans are financing, not income.</strong> Borrowing and principal repayments appear only in financing. Interest is an expense.</li>
+      <li><strong>Vehicle sales</strong> are investing inflows, netted against purchases.</li>
+      <li><strong>Depreciation</strong> covers vehicles only, using the game's own depreciated value at each year-end. The game has no depreciation for infrastructure; it charges upkeep instead.</li>
+      <li><strong>Sections collapse</strong> and rules mark every total, like a printed statement.</li>
+    </ul>
+
+    <h2>It shows its working</h2>
+    <p>Each statement ends with OK / CHECK lines: net income plus investing matches the game's own "Earnings" figure, closing cash matches your bank account, and the Balance Sheet balances. If the numbers don't tie, you'll see it.</p>
+
+    <h2>Reporting only</h2>
+    <p>It never changes prices, costs, income, loans or your cash, and it never books transactions. The only thing it stores in a save is a small ledger of year-end vehicle values, used for the depreciation line.</p>
+
+    <h2>Languages</h2>
+    <table>
+      <tr><td><strong>English</strong></td><td>Works in English</td></tr>
+      <tr><td><strong>Русский</strong></td><td>Работает на русском языке</td></tr>
+      <tr><td><strong>Français</strong></td><td>Fonctionne en français</td></tr>
+      <tr><td><strong>Deutsch</strong></td><td>Funktioniert auf Deutsch</td></tr>
+      <tr><td><strong>Português (Brasil)</strong></td><td>Funciona em português do Brasil (obrigado, caioindust!)</td></tr>
+      <tr><td><strong>日本語</strong></td><td>日本語に対応しています</td></tr>
+      <tr><td><strong>简体中文</strong></td><td>支持简体中文</td></tr>
+      <tr><td><strong>繁體中文</strong></td><td>支援繁體中文</td></tr>
+    </table>
+    <p>Translations are automated and haven't had a native-speaker review (the Brazilian Portuguese text is a community translation). Feedback and improvements are welcome on the <a href="https://mod.io/g/transportfever3/m/real-financial-statements">mod.io page</a>.</p>
+
+    <h2>Good to know</h2>
+    <ul>
+      <li>Depreciation is recorded from the start of a <strong>new game</strong>. In an existing save it appears from the second year-end onwards, and earlier years show 0 with a note.</li>
+      <li>The Balance Sheet shows the current position only; historical balance sheets aren't available.</li>
+      <li>Infrastructure is shown at cumulative construction cost, because the game doesn't expose infrastructure values.</li>
+    </ul>
+
+    <h2>Install</h2>
+    <p>Subscribe on <a href="https://mod.io/g/transportfever3/m/real-financial-statements">mod.io</a> or through the in-game Mod Hub, enable <code>Real Financial Statements</code> when you start or load a game, then open <em>Finance &rarr; Finances</em>.</p>
+  </main>
+
+  <footer>
+    <p>Mod ID <code>tcoleman_financial_statements_1</code> &middot; by Trevor Coleman &middot; <a href="https://github.com/trevor-coleman/real-financial-statements">source code and notes</a></p>
+  </footer>
+</div>
+</body>
+</html>
