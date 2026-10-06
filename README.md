@@ -2,6 +2,8 @@
 
 Replaces the **Finances** tab of the vanilla finance window with three statements: **Income Statement**, **Cash Flow**, **Balance Sheet**. A fourth tab, "Default", keeps the original table. Reporting only: the mod never books journal entries or sends commands, so it cannot change the economy. (It does keep a small saved ledger of year-end vehicle values for the depreciation line; see "Depreciation ledger".)
 
+Website: https://trevor-coleman.github.io/real-financial-statements/ · mod.io: https://mod.io/g/transportfever3/m/real-financial-statements · [Report a bug](https://github.com/trevor-coleman/real-financial-statements/issues/new?template=bug_report.md)
+
 > **Status: written from the game's own sources, NOT yet run in-game.** The accounting logic has unit tests (`tests/test_accounting.lua`), but no Lua interpreter was available here, so they haven't been executed either. See "Validation" for what to check first.
 
 ## Architecture
