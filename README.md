@@ -79,6 +79,8 @@ Identities: `Net change in cash = CFO + CFI + CFF`; `Assets = Liabilities + Equi
 
 Text is translated through the mod's `strings.json` (root of the mod folder, next to `mod.json`). In code every UI string is wrapped in `_("English text")`; the English text is the key, so a missing translation or key shows English. Languages: `en`, `ru`, `fr`, `de`, `pt_BR` (Brazilian Portuguese), `ja`, `zh_CN` (Simplified), `zh_TW` (Traditional). The Mod Hub name and tagline are translated via `localization` in `_metadata/modinfo.json`. The translations are automated and have not had a native-speaker review; feedback and improvements are welcome on the mod.io page.
 
+Want another language, or can you help improve one? [Open a translation request](https://github.com/trevor-coleman/real-financial-statements/issues/new?template=translation_request.md).
+
 To add a language: copy an entry in `strings.json` under the game's locale code (the codes are the files in the base game's `locale.zip`) and translate the values; keep the keys.
 
 ## Install
