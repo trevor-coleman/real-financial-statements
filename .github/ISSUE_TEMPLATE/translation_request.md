@@ -1,6 +1,6 @@
 ---
 name: Translation request
-about: Ask for a new language, or offer to translate one
+about: Suggest a better translation, or ask for a language the game adds later
 title: "Translation: "
 labels: translation
 assignees: ""
@@ -12,8 +12,7 @@ assignees: ""
 **Game language code**
 <!--
 Transport Fever 3 supports: de, en, es, fr, it, ja, ko, nl, pl, pt_BR, ru, zh_CN, zh_TW.
-Already in the mod: en, ru, fr, de, pt_BR, ja, zh_CN, zh_TW.
-Still missing: es, it, ko, nl, pl.
+The mod already has all of them. Most translations are automated, so wording improvements to an existing language are very welcome (use Notes below).
 The mod can only follow languages the game itself has a code for. If yours isn't in the list, say so and I will note it.
 -->
 

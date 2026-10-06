@@ -40,6 +40,26 @@
         "pt_BR": {
             "name": "Demonstrações Financeiras Reais",
             "summary": "Contabilidade de verdade para o seu império de transporte: DRE, fluxo de caixa e balanço."
+        },
+        "es": {
+            "name": "Estados Financieros Reales",
+            "summary": "Contabilidad de verdad para tu imperio de transporte: resultados, flujo de caja y balance."
+        },
+        "it": {
+            "name": "Veri Rendiconti Finanziari",
+            "summary": "Contabilità vera per il tuo impero dei trasporti: conto economico, flusso di cassa e bilancio."
+        },
+        "ko": {
+            "name": "진짜 재무제표",
+            "summary": "운송 제국을 위한 진짜 회계: 손익계산서, 현금흐름표, 재무상태표."
+        },
+        "nl": {
+            "name": "Echte Financiële Overzichten",
+            "summary": "Echte boekhouding voor je transportimperium: winst-en-verliesrekening, kasstroom en balans."
+        },
+        "pl": {
+            "name": "Prawdziwe Sprawozdania Finansowe",
+            "summary": "Prawdziwa księgowość dla Twojego imperium transportu: rachunek zysków i strat, przepływy i bilans."
         }
     }
 }
