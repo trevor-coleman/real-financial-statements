@@ -193,7 +193,25 @@ end
 -- table rendering (mirrors the markup of the vanilla finance table so vanilla styles apply)
 -- ---------------------------------------------------------------------------
 
+local function isGamepadInputMode()
+	return api.util.getInputMode() == api.type["enum"].InputMode.Gamepad
+end
+
+-- A plain text cell. The first cell of every body row is focusable so a controller can step
+-- through the rows (the scroll area has its own gamepad scrolling switched off, exactly like
+-- the vanilla table, so focus moving down the rows is what scrolls it).
 local StatementCell = react.RegisterRecipe("StatementCell", function(param)
+	if param.selectedRowKeyRef ~= nil then
+		local selected = react.useMirrorState(param.selectedRowKeyRef)
+		if selected:old() == param.rowKey then
+			react.setStyleClasses("row-selected")
+		end
+	end
+	if param.collapse then
+		react.useInputAction("IA_NAV_LEFT", react.iaHandler(function()
+			param.collapse()
+		end))
+	end
 	return builtin.BoxLayout{
 		orientation = builtin.type.Orientation.Horizontal,
 		children = {
@@ -230,16 +248,26 @@ local function money(value)
 	return api.util.formatMoney(math.floor(value + (value >= 0 and 0.5 or -0.5)))
 end
 
-local function makeRow(rowKey, texts, classes, index, variant, sumLine)
+local function makeRow(rowKey, texts, classes, index, variant, sumLine, selectedRef, focusable, collapse)
 	local cells = {}
 	for i, text in ipairs(texts) do
 		local textClass = "font-scale-body"
 		if classes[i] then textClass = textClass .. ", " .. classes[i] end
+		local first = i == 1
 		cells[i] = StatementCell{
-			meta = { class = "cell, view, " .. rowClass(index, variant, i == 1, i == #texts)
-				.. (sumLine and ", sum-line" or "") },
+			meta = {
+				class = "cell, view, " .. rowClass(index, variant, first, i == #texts)
+					.. (sumLine and ", sum-line" or ""),
+				forceFocusable = focusable and first or false,
+				onAttention = (focusable and first and selectedRef) and function(focus)
+					if focus then selectedRef:set(rowKey) end
+				end or nil,
+			},
+			rowKey = rowKey,
+			selectedRowKeyRef = (focusable and selectedRef) or nil,
 			class = textClass,
 			text = text,
+			collapse = first and collapse or nil, -- only the focusable cell handles "left"
 		}
 	end
 	return builtin.Row{ meta = { localKey = rowKey }, cells = cells }
@@ -250,7 +278,21 @@ local ARROW_DOWN = "::/game_mechanics/finance/icons/slim_arrow_down.tga"
 
 -- A clickable section-header cell (same markup as the vanilla table's expandable rows).
 local SectionCell = react.RegisterRecipe("SectionCell", function(param)
+	local selfRef = react.useSelfRef()
 	local buttonRef = react.useNodeRef()
+
+	local selected = react.useMirrorState(param.selectedRowKeyRef)
+	if selected:old() == param.rowKey then
+		react.setStyleClasses("row-selected")
+	end
+
+	-- same controller behaviour as the vanilla expandable rows: left collapses, right expands
+	if param.expanded then
+		react.useInputAction("IA_NAV_LEFT", react.iaForward(buttonRef, "ACTION_CLICK"))
+	else
+		react.useInputAction("IA_NAV_RIGHT", react.iaForward(buttonRef, "IA_SELECT"))
+	end
+
 	local content
 	if param.isFirst then
 		content = builtin.BoxLayout{
@@ -273,20 +315,31 @@ local SectionCell = react.RegisterRecipe("SectionCell", function(param)
 			value = param.expanded and 1 or 0,
 			onValueChange = function(_)
 				param.onToggle()
+				selfRef:get():focus()
 			end,
 			meta = { class = "cell-button" .. (param.isFirst and ", left-edge" or "") .. (param.isLast and ", right-edge" or "") },
 		}),
 	}
 end)
 
-local function makeSectionRow(rowKey, texts, classes, index, expanded, onToggle)
+local function makeSectionRow(rowKey, texts, classes, index, expanded, onToggle, selectedRef)
 	local cells = {}
 	for i, text in ipairs(texts) do
 		local textClass = "font-scale-body"
 		if classes[i] then textClass = textClass .. ", " .. classes[i] end
 		local edge = (i == #texts) and ", right-edge" or (i == 1 and ", left-edge" or "")
 		cells[i] = SectionCell{
-			meta = { class = "cell, " .. ((index % 2 == 0) and "even" or "odd") .. edge },
+			meta = {
+				class = "cell, " .. ((index % 2 == 0) and "even" or "odd") .. edge,
+				-- only the first cell takes focus; the others sit inside the same row
+				forceFocusable = i == 1,
+				disableFocusableRecursive = i ~= 1,
+				onAttention = function(focus)
+					if focus and not isGamepadInputMode() then selectedRef:set(rowKey) end
+				end,
+			},
+			rowKey = rowKey,
+			selectedRowKeyRef = selectedRef,
 			text = text,
 			textClass = textClass,
 			isFirst = i == 1,
@@ -300,7 +353,7 @@ end
 
 -- rows: list of { label, values = {..}|nil, kind = "header"|"line"|"total"|"memo", key = sectionKey (header),
 --                 parent = sectionKey (line) }.  expanded: { sectionKey = 0|1 };  toggle(sectionKey)
-local function buildTable(prefix, headers, rows, expanded, toggle)
+local function buildTable(prefix, headers, rows, expanded, toggle, selectedRef)
 	local columns = #headers
 
 	local headerTexts, headerClasses = { "" }, { "category" }
@@ -308,7 +361,7 @@ local function buildTable(prefix, headers, rows, expanded, toggle)
 		headerTexts[i + 1] = tostring(h)
 		headerClasses[i + 1] = nil
 	end
-	local headerRows = { makeRow(prefix .. "-header", headerTexts, headerClasses, 0, "First") }
+	local headerRows = { makeRow(prefix .. "-header", headerTexts, headerClasses, 0, "First", false, selectedRef, false) }
 
 	local detailRows = {}
 	local index = 0
@@ -335,10 +388,12 @@ local function buildTable(prefix, headers, rows, expanded, toggle)
 			local rowKey = prefix .. "-" .. tostring(rowNumber)
 			if row.kind == "header" and expanded ~= nil then
 				detailRows[#detailRows + 1] = makeSectionRow(rowKey, texts, classes, index,
-					expanded[row.key] == 1, function() toggle(row.key) end)
+					expanded[row.key] == 1, function() toggle(row.key) end, selectedRef)
 			else
 				-- a rule above every total row shows where the sum is taken
-				detailRows[#detailRows + 1] = makeRow(rowKey, texts, classes, index, nil, row.kind == "total")
+				local collapse = (row.parent ~= nil and expanded ~= nil) and function() toggle(row.parent) end or nil
+				detailRows[#detailRows + 1] = makeRow(rowKey, texts, classes, index, nil, row.kind == "total",
+					selectedRef, true, collapse)
 			end
 		end
 	end
@@ -511,6 +566,7 @@ local StatementsRecipe = react.RegisterRecipe("FinancesTable", function()
 	react.useInputAction("IA_NAV_DOWN", react.iaFocusTraversal(false, true))
 
 	local tabState = react.useState("Income")
+	local selectedRowKeyRef = react.useRef("")
 
 	-- one expanded/collapsed flag per collapsible section (fixed list: hook count must stay stable)
 	local SECTION_KEYS = { "is_rev", "is_opex", "cf_op", "cf_inv", "cf_fin", "bs_assets", "bs_liab", "bs_equity" }
@@ -557,7 +613,7 @@ local StatementsRecipe = react.RegisterRecipe("FinancesTable", function()
 
 	local incomePage = statementPage(
 		tr("Income Statement"),
-		buildTable("is", computed.headers, incomeStatementRows(computed), expanded, toggleSection),
+		buildTable("is", computed.headers, incomeStatementRows(computed), expanded, toggleSection, selectedRowKeyRef),
 		(function()
 			local checks = {
 				{ ok = true, text = tr("Capital expenditure is excluded from net income (shown as a memo line)") },
@@ -574,7 +630,7 @@ local StatementsRecipe = react.RegisterRecipe("FinancesTable", function()
 
 	local cashPage = statementPage(
 		tr("Cash Flow Statement"),
-		buildTable("cf", computed.headers, cashFlowRows(computed), expanded, toggleSection),
+		buildTable("cf", computed.headers, cashFlowRows(computed), expanded, toggleSection, selectedRowKeyRef),
 		accounting.cashFlowChecks(computed, liveCash)
 	)
 
@@ -599,7 +655,7 @@ local StatementsRecipe = react.RegisterRecipe("FinancesTable", function()
 		end
 		balancePage = statementPage(
 			tr("Balance Sheet (as of now)"),
-			buildTable("bs", { tr("Now") }, balanceSheetRows(sheet), expanded, toggleSection),
+			buildTable("bs", { tr("Now") }, balanceSheetRows(sheet), expanded, toggleSection, selectedRowKeyRef),
 			checks
 		)
 	end
