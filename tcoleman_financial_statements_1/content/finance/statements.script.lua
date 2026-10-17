@@ -660,35 +660,39 @@ local StatementsRecipe = react.RegisterRecipe("FinancesTable", function()
 		)
 	end
 
-	local function tab(key, label, page)
-		return builtin.TabWidgetChild{
-			localKey = "statement_" .. key,
-			value = key,
-			indicator = builtin.TextView{
-				meta = { class = "font-scale-tab-widget-indicator" },
-				text = label,
-			},
-			item = page,
+	-- The four views are plain buttons, not a nested TabWidget: a second tab widget inside the
+	-- finance window's own tab bar takes the controller's L1/R1 for itself, so players could not
+	-- reach the Loans tab and the other top-level tabs once focus was in the content.
+	local views = {
+		{ key = "Income", label = tr("Income Statement") },
+		{ key = "Cash", label = tr("Cash Flow") },
+		{ key = "Balance", label = tr("Balance Sheet") },
+		{ key = "Vanilla", label = tr("Default") },
+	}
+	local viewButtons = {}
+	for _, view in ipairs(views) do
+		viewButtons[#viewButtons + 1] = builtin.Button{
+			meta = { localKey = "view_" .. view.key, class = (tabState:old() == view.key) and "primary" or nil },
+			content = builtin.TextView{ meta = { class = "font-scale-body" }, text = view.label },
+			onClick = function() tabState:set(view.key) end,
 		}
 	end
+
+	local current = tabState:old()
+	local page
+	if current == "Cash" then page = cashPage
+	elseif current == "Balance" then page = balancePage
+	elseif current == "Vanilla" then page = react.CallOriginalRecipe(original_finances_table)
+	else page = incomePage end
 
 	return builtin.BoxLayout{
 		orientation = builtin.type.Orientation.Vertical,
 		children = {
-			builtin.TabWidget{
-				orientation = builtin.type.TabOrientation.North,
-				deselectAllowed = false,
-				initialValue = "Income",
-				onValueChange = function(value)
-					tabState:set(value)
-				end,
-				tabs = {
-					tab("Income", tr("Income Statement"), incomePage),
-					tab("Cash", tr("Cash Flow"), cashPage),
-					tab("Balance", tr("Balance Sheet"), balancePage),
-					tab("Vanilla", tr("Default"), react.CallOriginalRecipe(original_finances_table)),
-				},
+			builtin.BoxLayout{
+				orientation = builtin.type.Orientation.Horizontal,
+				children = viewButtons,
 			},
+			page,
 		},
 	}
 end)
